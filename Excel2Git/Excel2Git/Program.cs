@@ -54,8 +54,8 @@ namespace Excel2Git
 
         static void Usage()
         {
-            Console.WriteLine("GitImporter.exe - Utility to import issues for and excel wooksheet to a Git repository");
-            Console.WriteLine("Usage:  GitImporter.exe xlsfile repo <username> <password>");
+            Console.WriteLine("Excel2Git.exe - Utility to import issues from an Excel wooksheet to a Git repository");
+            Console.WriteLine("Usage:  Excel2Git.exe xlsfile repo <username> <password>");
             Console.WriteLine("        xlsfile - The path the to xls file to import.");
             Console.WriteLine("        repo - The name of the Git repo where issues should be import.");
             Console.WriteLine("        username - Your Git username.");
