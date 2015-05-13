@@ -27,7 +27,8 @@
     <Reference Include="ICSharpCode.SharpZipLib">
       <HintPath>..\packages\SharpZipLib.0.86.0\lib\20\ICSharpCode.SharpZipLib.dll</HintPath>
     </Reference>
-    <Reference Include="Octokit">
+    <Reference Include="Octokit, Version=0.11.0.0, Culture=neutral, processorArchitecture=MSIL">
+      <SpecificVersion>False</SpecificVersion>
       <HintPath>..\packages\Octokit.0.11.0\lib\net45\Octokit.dll</HintPath>
     </Reference>
     <Reference Include="System" />

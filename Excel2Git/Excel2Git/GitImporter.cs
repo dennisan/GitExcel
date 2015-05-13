@@ -15,21 +15,28 @@ namespace Excel2Git
     public class GitRepo
     {
         private GitHubClient Client;
-        private string Owner;
+        private string Username;
         private Uri RepoUri;
         
         public GitRepo(string username, string password)
         {
+            Username = username;
+
             Client = new GitHubClient(new ProductHeaderValue("mspnp-importer"));
-            Owner = username;
             var basicAuth = new Credentials(username, password);
             Client.Credentials = basicAuth;
         }
 
 
-        public async Task<int> ImportXls(string xlsPath, string repoName)
+        public async Task<int> ImportXls(string xlsPath, string repoName, string repoOwner = null)
         {
             int recordsImported = 0;
+
+            if (string.IsNullOrEmpty(repoName))
+                throw new ArgumentException("repoName missing");
+
+            if (string.IsNullOrEmpty(repoOwner))
+                repoOwner = Username;
 
             if (!File.Exists(xlsPath))
             {
@@ -60,8 +67,7 @@ namespace Excel2Git
                             string size = row["Size"].ToString();
                             string timeframe = row["Timeframe"].ToString();
                             string status = row["Status"].ToString();
-                            string owner = Owner;
-                            //string assignee = row["Assignee"].ToString(); ;
+                            string owner = Username;
 
                             if (category.Length == 0)
                                 category = lastCategory;
@@ -76,8 +82,6 @@ namespace Excel2Git
 
                                     if (description.Length > 0) newIssue.Body = description;
                                     if (owner.Length > 0) newIssue.Assignee = owner;
-                                    // if (assignee.Length > 0) newIssue.Assignee = assignee;
-                                    // if (milestone.Length > 0) newIssue.Milestone = milestone;
 
                                     if (size.Length > 0) newIssue.Labels.Add(string.Format("Size {0}", size));
                                     if (priority.Length > 0) newIssue.Labels.Add(string.Format("Pri {0}", priority));
@@ -85,13 +89,14 @@ namespace Excel2Git
                                     if (status.Length > 0) newIssue.Labels.Add(string.Format("Status {0}", status));
                                     if (category.Length > 0) newIssue.Labels.Add(category);
 
-                                    var issue = await issuesClient.Create(owner, repoName, newIssue);
+                                    var issue = await issuesClient.Create(repoOwner, repoName, newIssue);
                                     recordsImported++;
+
+                                    // sleep to avoid spam trigger alert
+                                    Thread.Sleep(3500);
 
                                     Console.WriteLine("Inserting \"{0}\"", guidance);
 
-                                    // sleep to avoid server rate limits
-                                    // Thread.Sleep(2000);
                                 }
                             }
                             catch (Exception e)
