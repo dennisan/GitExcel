@@ -4,51 +4,124 @@ using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 
-namespace Excel2Git
+namespace GitExcel
 {
+	enum ActionType { Import, Export }; 
+
     class Program
     {
-        static void Main(string[] args)
+		ActionType Action = ActionType.Export;
+		string XlsFile;
+		string Repo;
+		string Owner;
+		string User;
+		string Pass;
+
+		static void Main(string[] args)
         {
-            string xlsFile = "";
-            string repoName = "";
-            string repoOwner = "";
-            string username = "";
-            string password = "";
+			var p = new Program();
+	
+			if (p.ParseArgs(args))
+				p.Run();
 
-            if (args.Length < 2)
-            {
-                Usage();
-                return;
-            }
+			Console.ReadLine();
+		}
 
-            xlsFile = args[0];
-            repoName = args[1];
-            repoOwner = args[2];
+		void Run() {
 
-            Console.Write("Enter Git username: ");
-            username = Console.ReadLine();
-            Console.Write("Enter Git password: ");
-            password = Console.ReadLine();
-            Console.WriteLine("");
+			var repo = new GitRepo(User, Pass);
 
-            Console.WriteLine("Importing backlog items from {0} to Git Repo {1}", xlsFile, repoName);
+			if (Action == ActionType.Export)
+			{
+				Console.WriteLine("Exporting issues from repo {0} to spreadsheet {1}", Repo, XlsFile);
+				Task<int> t = repo.ExportXls(XlsFile, Repo, Owner);
+				t.Wait();
+				Console.WriteLine("{0} issues exported to the spreadsheet {1}", t.Result, XlsFile);
+			}
+			else
+			{
+				Console.WriteLine("Importing issues from {0} to Git Repo {1}", XlsFile, Repo);
+				Task<int> t = repo.ImportXls(XlsFile, Repo, Owner);
+				t.Wait();
+				Console.WriteLine("{0} issues imported to the Git repo {1}", t.Result, Repo);
 
-            var repo = new GitRepo(username, password);
-            Task<int> t = repo.ImportXls(xlsFile, repoName, repoOwner);
-            t.Wait();
+			}
 
-            Console.WriteLine("{0} issues imported in the Git repo {1}", t.Result, repoName);
-
+			return;
         }
 
-        static void Usage()
+		bool ParseArgs(string[] args)
+		{
+			if (args.Length > 0 && args[0].ToLower().Substring(0,2) == "/h")
+			{
+				Usage();
+				return false;
+			}
+
+			for (int i = 0; i < args.Length; i++) 
+			{
+				var arg = args[i].ToLower().Substring(0,2);
+
+				switch (arg)
+				{
+					case "/i":
+						Action = ActionType.Import;
+						break;
+					case "/e":
+						Action = ActionType.Export;
+						break;
+					case "/r":
+						Repo = args[++i];
+						break;
+					case "/o":
+						Owner = args[++i];
+						break;
+					case "/u":
+						User = args[++i];
+						break;
+					case "/p":
+						Pass = args[++i];
+						break;
+					default:
+						XlsFile = args[i];
+						break;
+				}
+			}
+
+			// set owner to user if not set
+			if (Owner == null && User != null)
+				Owner = User;
+
+			// set outfile to default if exporting
+			if (XlsFile == null && Action == ActionType.Export)
+				XlsFile = "output.xls";
+
+			if (XlsFile == null || Repo == null || Owner == null || User == null || Pass == null) {
+				Usage("Missing one or more required argument(s).");
+				return false;
+			}
+
+			return true;
+		}
+
+        void Usage(string errorMessage = null)
         {
-            Console.WriteLine("Excel2Git.exe - Utility to import issues from an Excel wooksheet to a Git repository");
-            Console.WriteLine("Usage:  Excel2Git.exe XlsFile RepoositoryName <RepositoryOwner>");
-            Console.WriteLine("  XlsFile:   Path to the xls file to import.");
-            Console.WriteLine("  RepositoryName:  Name of the Git repository where issues should be import");
-            Console.WriteLine("  RepositoryOwner: Owner of the Git repository where issues should be import - owner is current user if not supplied");
+			if (errorMessage != null)
+				Console.WriteLine("Error - {0}", errorMessage);
+
+			Console.WriteLine();
+			Console.WriteLine("GitExcel - A utility for tranfering issues between a Git repository and an Excel wooksheet.");
+			Console.WriteLine();
+			Console.WriteLine("Usage: GitExcel <xlsfile> /Help /Import /Export /R <repo> /O <owner> /U <username> /P <password>");
+			Console.WriteLine();
+			Console.WriteLine("  <xlsfile>    - Full path to the xls file to import or export (Required)");
+			Console.WriteLine("  /Import      - Import issues from a spreadsheet to a Git repo");
+            Console.WriteLine("  /Export      - Export issues from a Git repo to a spreadsheet (default)");
+			Console.WriteLine("  /Help        - Show this help text");
+			Console.WriteLine("  <repo>       - Name of the Git repository (Required)");
+			Console.WriteLine("  <owner>      - Owner of the Git repository (Required)");
+			Console.WriteLine("  <username>   - Git user who has access to the repository (Required)");
+			Console.WriteLine("  <password>   - Git user's password (Required)");
         }
     }
 }

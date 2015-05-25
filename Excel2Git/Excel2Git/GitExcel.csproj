@@ -7,8 +7,8 @@
     <ProjectGuid>{0A4E4173-1C2D-4457-ACC3-00FDC684AC3F}</ProjectGuid>
     <OutputType>Exe</OutputType>
     <AppDesignerFolder>Properties</AppDesignerFolder>
-    <RootNamespace>Excel2Git</RootNamespace>
-    <AssemblyName>Excel2Git</AssemblyName>
+    <RootNamespace>GitExcel</RootNamespace>
+    <AssemblyName>GitExcel</AssemblyName>
     <TargetFrameworkVersion>v4.5</TargetFrameworkVersion>
     <FileAlignment>512</FileAlignment>
   </PropertyGroup>
@@ -23,6 +23,9 @@
   <ItemGroup>
     <Reference Include="Excel">
       <HintPath>..\packages\ExcelDataReader.2.1.2.3\lib\net45\Excel.dll</HintPath>
+    </Reference>
+    <Reference Include="ExcelExporter">
+      <HintPath>..\packages\SLaks.ExcelExport.1.0.0.0\lib\net35\ExcelExporter.dll</HintPath>
     </Reference>
     <Reference Include="ICSharpCode.SharpZipLib">
       <HintPath>..\packages\SharpZipLib.0.86.0\lib\20\ICSharpCode.SharpZipLib.dll</HintPath>
@@ -41,7 +44,7 @@
     <Reference Include="System.Xml" />
   </ItemGroup>
   <ItemGroup>
-    <Compile Include="GitImporter.cs" />
+    <Compile Include="GitRepo.cs" />
     <Compile Include="Program.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
   </ItemGroup>
