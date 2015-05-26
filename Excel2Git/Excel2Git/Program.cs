@@ -23,8 +23,6 @@ namespace GitExcel
 	
 			if (p.ParseArgs(args))
 				p.Run();
-
-			Console.ReadLine();
 		}
 
 		void Run() {
