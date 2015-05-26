@@ -3,7 +3,7 @@ Microsoft Visual Studio Solution File, Format Version 12.00
 # Visual Studio 2013
 VisualStudioVersion = 12.0.31101.0
 MinimumVisualStudioVersion = 10.0.40219.1
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "GitExcel", "Excel2Git\GitExcel.csproj", "{0A4E4173-1C2D-4457-ACC3-00FDC684AC3F}"
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "GitExcel", "GitExcel\GitExcel.csproj", "{0A4E4173-1C2D-4457-ACC3-00FDC684AC3F}"
 EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution

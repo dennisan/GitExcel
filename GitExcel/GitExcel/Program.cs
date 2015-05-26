@@ -108,7 +108,7 @@ namespace GitExcel
 				Console.WriteLine("Error - {0}", errorMessage);
 
 			Console.WriteLine();
-			Console.WriteLine("GitExcel - A utility for tranfering issues between a Git repository and an Excel wooksheet.");
+			Console.WriteLine("GitExcel - A utility for tranferring issues between a Git repository and an Excel worksheet.");
 			Console.WriteLine();
 			Console.WriteLine("Usage: GitExcel <xlsfile> /Help /Import /Export /R <repo> /O <owner> /U <username> /P <password>");
 			Console.WriteLine();
