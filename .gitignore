@@ -1,0 +1,5 @@
+*.suo
+/GitExcel/packages
+/GitExcel/GitExcel/bin
+/GitExcel/GitExcel/obj
+*.user
